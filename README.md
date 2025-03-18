@@ -2,7 +2,7 @@
 
 An open-source alternative web-based interface for interacting with you iungo smart-controller.
 
-![GitHub License](https://img.shields.io/github/license/JesseKoldewijn/open-smart-controller-ui)
+![MIT Licence](https://img.shields.io/github/license/JesseKoldewijn/open-smart-controller-ui?cacheSeconds=300)
 
 ## Acknowledgements
 
