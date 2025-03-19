@@ -5,14 +5,18 @@
 		"useDefineForClassFields": true,
 		"module": "ESNext",
 		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"forceConsistentCasingInFileNames": true,
+		"importHelpers": true,
 		"skipLibCheck": true,
 		"paths": {
 			"react": ["./node_modules/preact/compat/"],
+			"react/jsx-runtime": ["./node_modules/preact/jsx-runtime"],
 			"react-dom": ["./node_modules/preact/compat/"],
+			"react-dom/*": ["./node_modules/preact/compat/*"],
 			/** internal-aliasses */
 			"~/*": ["./src/*"],
-			"~api/*": ["./src/logic/api/*"],
-			"~api": ["./src/logic/api"],
+			"~api/*": ["./src/lib/api/*"],
+			"~api": ["./src/lib/api"],
 			"~methods/*": ["./src/logic/methods/*"],
 			"~methods": ["./src/logic/methods"]
 		},
@@ -31,7 +35,10 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
-		"noUncheckedSideEffectImports": true
+		"noUncheckedSideEffectImports": true,
+
+		/** Plugins */
+		"plugins": [{ "name": "eslint-plugin-export-scope" }]
 	},
 	"include": ["src"]
 }

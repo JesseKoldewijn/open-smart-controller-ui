@@ -1,15 +1,11 @@
-import { callApi } from "~api";
-import { ApiOptions } from "~api/types";
+import { api } from "~/lib/api";
+import { ApiOptions } from "~/lib/api/types";
 
-export const getSystemVersion = () => {
-	const opts = {
-		seq: 1,
-		method: "sysinfo_version",
-		arguments: {},
-	} satisfies ApiOptions;
-
-	return callApi<SystemVersionResponse>(opts);
-};
+const opts = {
+	seq: 1,
+	method: "sysinfo_version",
+	arguments: {},
+} satisfies ApiOptions;
 
 interface SystemVersionResponse {
 	ok: boolean;
@@ -32,3 +28,5 @@ interface SystemVersionResponse {
 	seq: number;
 	error: boolean;
 }
+
+export const getSystemVersion = () => api<SystemVersionResponse>(opts);

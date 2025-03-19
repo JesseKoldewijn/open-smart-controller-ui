@@ -1,40 +1,9 @@
 import { useLayoutEffect, useState } from "react";
 import { API_CONSTANTS } from "./constants";
 import { ApiOptions } from "./types";
+import { internal_api } from "~/lib/api/internals";
 
-class Api<GenericResponseType> {
-	options: ApiOptions = API_CONSTANTS.DEFAULT_OPTIONS;
-
-	constructor(options: ApiOptions) {
-		this.options = options;
-	}
-
-	async call() {
-		try {
-			const response = await fetch(
-				new URL(API_CONSTANTS.PATHNAME, API_CONSTANTS.DEFAULT_DOMAIN),
-				{
-					mode: "cors",
-					method: API_CONSTANTS.HTTP_METHOD,
-					body: JSON.stringify(this.options),
-				}
-			);
-			if (!response.ok) {
-				throw new Error(`HTTP error! Status: ${response.status}`);
-			}
-			return (await response.json()) as GenericResponseType;
-		} catch (error) {
-			console.error(error);
-			return null;
-		}
-	}
-}
-
-const internal_api = <GenericResponseType>(options: ApiOptions) => {
-	return new Api<GenericResponseType>(options).call();
-};
-
-export const callApi = <GenericResponseType>(opts: ApiOptions) => {
+export const api = <GenericResponseType>(opts: ApiOptions) => {
 	/** Response */
 	const [response, setResponse] = useState<GenericResponseType | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(true);

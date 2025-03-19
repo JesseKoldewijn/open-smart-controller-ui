@@ -1,5 +1,5 @@
-import Show from "./components/core/show";
-import { getSystemVersion } from "./logic/methods/system/sysinfo_version";
+import Show from "~/components/core/show";
+import { getSystemVersion } from "~/logic/methods/system/sysinfo_version";
 
 export const App = () => {
 	const {
@@ -30,8 +30,6 @@ export const App = () => {
 
 	return (
 		<div>
-			<h1>Testing stuff in preact</h1>
-
 			<Show isVisible={isLoading} fallback={null}>
 				{loader}
 			</Show>
