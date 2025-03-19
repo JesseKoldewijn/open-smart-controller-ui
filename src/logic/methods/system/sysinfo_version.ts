@@ -1,14 +1,14 @@
-import { Api, ApiOptions } from "../../api";
+import { callApi } from "~api";
+import { ApiOptions } from "~api/types";
 
-export const getSystemVersion = async () => {
+export const getSystemVersion = () => {
 	const opts = {
 		seq: 1,
 		method: "sysinfo_version",
 		arguments: {},
 	} satisfies ApiOptions;
 
-	const apiInstance = new Api<SystemVersionResponse>(opts);
-	return await apiInstance.call();
+	return callApi<SystemVersionResponse>(opts);
 };
 
 interface SystemVersionResponse {

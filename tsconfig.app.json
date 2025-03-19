@@ -7,10 +7,14 @@
 		"lib": ["ES2020", "DOM", "DOM.Iterable"],
 		"skipLibCheck": true,
 		"paths": {
-			"react": ["./node_modules/preact/compat"],
-			"react/jsx-runtime": ["./node_modules/preact/jsx-runtime"],
+			"react": ["./node_modules/preact/compat/"],
 			"react-dom": ["./node_modules/preact/compat/"],
-			"react-dom/*": ["./node_modules/preact/compat/*"]
+			/** internal-aliasses */
+			"~/*": ["./src/*"],
+			"~api/*": ["./src/logic/api/*"],
+			"~api": ["./src/logic/api"],
+			"~methods/*": ["./src/logic/methods/*"],
+			"~methods": ["./src/logic/methods"]
 		},
 
 		/* Bundler mode */

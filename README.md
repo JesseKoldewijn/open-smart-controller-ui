@@ -6,7 +6,7 @@ An open-source alternative web-based interface for interacting with you iungo sm
 
 ## Acknowledgements
 
--   [Official iungo website](https://iungo.nl)
+- [Official iungo website](https://iungo.nl)
 
 ## Installation
 
