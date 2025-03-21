@@ -1,74 +1,30 @@
-import { useLayoutEffect, useState } from "react";
-import { API_CONSTANTS } from "./constants";
 import { ApiOptions } from "./types";
 import { internal_api } from "~/lib/api/internals";
+import { useQuery as query } from "@tanstack/react-query";
 
 export const api = <GenericResponseType>(opts: ApiOptions) => {
-	/** Response */
-	const [response, setResponse] = useState<GenericResponseType | null>(null);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
-	const fetchData = async () => {
-		setIsLoading(true);
-		const response = await internal_api<GenericResponseType>(opts);
-		setResponse(response);
-		setIsLoading(false);
-	};
-	const updateResponse = async () => await fetchData();
+	return internal_api<GenericResponseType>(opts);
+};
 
-	/** Polling */
-	const [pollingEnabled, setPollingEnabled] = useState<boolean>(
-		API_CONSTANTS.POLLING.ENABLED
-	);
-	const [pollingRate, setPollingRate] = useState<number>(
-		API_CONSTANTS.POLLING.INTERVAL.DEFAULT
-	);
-	const checkPollingRateValid = (ms?: number) => {
-		if (!ms) return true;
-		const isValid =
-			ms >= API_CONSTANTS.POLLING.INTERVAL.MIN &&
-			ms <= API_CONSTANTS.POLLING.INTERVAL.MAX;
+export const createApiHook = <GenericResponseType>(opts: ApiOptions) => {
+	let isPolling = false;
 
-		if (isValid) return true;
-
-		console.error(
-			`Polling rate must be between ${API_CONSTANTS.POLLING.INTERVAL.MIN} and ${API_CONSTANTS.POLLING.INTERVAL.MAX}`
-		);
-
-		return false;
+	const pollingHelper = (callback: () => void) => {
+		if (isPolling) return;
+		isPolling = true;
+		const interval = setInterval(() => {
+			callback();
+		}, 1000);
+		return () => clearInterval(interval);
 	};
 
-	/** Side-Effect */
-	useLayoutEffect(() => {
-		try {
-			fetchData();
-
-			if (pollingEnabled) {
-				if (!checkPollingRateValid(pollingRate)) {
-					setPollingEnabled(false);
-					return;
-				}
-				const intervalId = setInterval(fetchData, pollingRate);
-				return () => clearInterval(intervalId);
-			}
-		} catch (error) {
-			console.error(error);
-			setPollingEnabled(false);
-		}
-	}, [pollingEnabled]);
+	const q = query({
+		queryKey: ["systemVersion"],
+		queryFn: async () => api<GenericResponseType>(opts),
+	});
 
 	return {
-		response,
-		isLoading,
-		pollingEnabled,
-		updateResponse,
-		enablePolling: (ms?: number) => {
-			if (ms) {
-				if (checkPollingRateValid(ms)) setPollingRate(ms);
-				else console.error("Invalid polling rate");
-			}
-
-			setPollingEnabled(true);
-		},
-		disablePolling: () => setPollingEnabled(false),
+		...q,
+		pollingHelper,
 	};
 };

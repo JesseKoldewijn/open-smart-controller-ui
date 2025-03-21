@@ -1,4 +1,5 @@
-import { api } from "~/lib/api";
+import { createApiHook } from "~/lib/api";
+import { internal_api } from "~/lib/api/internals";
 import { ApiOptions } from "~/lib/api/types";
 
 const opts = {
@@ -29,4 +30,7 @@ interface SystemVersionResponse {
 	error: boolean;
 }
 
-export const getSystemVersion = () => api<SystemVersionResponse>(opts);
+export const useSystemVersionQuery = () =>
+	createApiHook<SystemVersionResponse>(opts);
+
+export const getSystemVersion = internal_api<SystemVersionResponse>(opts);
