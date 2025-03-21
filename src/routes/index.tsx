@@ -7,7 +7,8 @@ export const Route = createFileRoute("/")({
 });
 
 function RouteComponent() {
-	const { data, refetch, isLoading } = useSystemVersionQuery();
+	const { data, refetch, isLoading, enablePolling, disablePolling } =
+		useSystemVersionQuery();
 
 	const loader = (
 		<div
@@ -44,7 +45,15 @@ function RouteComponent() {
 						}).format(new Date())}`}
 				</code>
 			</div>
-			<button onClick={() => refetch()}>refetch</button>
+			<button type="button" onClick={() => refetch()}>
+				refetch
+			</button>
+			<button type="button" onClick={() => enablePolling()}>
+				polling
+			</button>
+			<button type="button" onClick={() => disablePolling()}>
+				stop polling
+			</button>
 		</div>
 	);
 }
