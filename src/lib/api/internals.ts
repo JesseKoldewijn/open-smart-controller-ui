@@ -3,9 +3,18 @@ import { ApiOptions } from "~/lib/api/types";
 
 class Internal_Api<GenericResponseType> {
 	options: ApiOptions = API_CONSTANTS.DEFAULT_OPTIONS;
+	stateUpdateCallback: <GenericResponseType>(
+		data: GenericResponseType
+	) => void = () => {};
 
-	constructor(options: ApiOptions) {
+	constructor(
+		options: ApiOptions,
+		stateUpdateCallback: <GenericResponseType>(
+			data: GenericResponseType
+		) => void = () => {}
+	) {
 		this.options = options;
+		this.stateUpdateCallback = stateUpdateCallback;
 	}
 
 	async call() {
@@ -21,7 +30,11 @@ class Internal_Api<GenericResponseType> {
 			if (!response.ok) {
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}
-			return (await response.json()) as GenericResponseType;
+			const data = (await response.json()) as GenericResponseType;
+
+			if (this.stateUpdateCallback) this.stateUpdateCallback(data);
+
+			return data;
 		} catch (error) {
 			console.error(error);
 			return null;
@@ -36,6 +49,14 @@ class Internal_Api<GenericResponseType> {
  * @returns {Promise<GenericResponseType>}
  * @scope ../
  */
-export const internal_api = <GenericResponseType>(options: ApiOptions) => {
-	return new Internal_Api<GenericResponseType>(options).call();
+export const internal_api = <GenericResponseType>(
+	options: ApiOptions,
+	stateUpdateCallback?: <GenericResponseType>(
+		data: GenericResponseType
+	) => void
+) => {
+	return new Internal_Api<GenericResponseType>(
+		options,
+		stateUpdateCallback
+	).call();
 };

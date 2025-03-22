@@ -29,4 +29,4 @@ interface SystemPingResponse {
 	error: boolean;
 }
 
-export const getSystemVersion = () => api<SystemPingResponse>(opts);
+export const getSystemPing = () => api<SystemPingResponse>(opts);
