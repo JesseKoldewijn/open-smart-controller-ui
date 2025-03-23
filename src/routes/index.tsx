@@ -6,12 +6,19 @@ export const Route = createFileRoute("/")({
 });
 
 function RouteComponent() {
-	const { version } = systemStore.getVersionStore.getState();
+	const { version: versionData } = systemStore.getVersionStore.getState();
+	const { version, date, serial, build } = versionData;
 
 	return (
 		<div>
 			<div style={{ minHeight: 160 }}>
-				<pre>{JSON.stringify(version, null, 2)}</pre>
+				<pre>
+					{JSON.stringify(
+						{ serial, version, build, lastUpdated: date },
+						null,
+						2
+					)}
+				</pre>
 			</div>
 		</div>
 	);

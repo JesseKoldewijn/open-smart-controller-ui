@@ -1,26 +1,24 @@
 import { createStore } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import { getConnectionStatus } from "~/logic/network/detection";
 import { deepMerge } from "~/store";
 
 export const NetworkClientStoreNamespace = "network>client";
 
-type NetworkClientDetailsType = ReturnType<typeof getConnectionStatus>;
-
 interface NetworkClient {
-	ipAddress: string;
-	connectionDetails: NetworkClientDetailsType;
-	setConnectionDetails: (data: NetworkClientDetailsType) => void;
+	ipAddresses: string[];
+	ipAddressRanges: string[];
+	setIpAddresses: (data: string[]) => void;
+	setIpRanges: (data: string[]) => void;
 }
 
 const networkClientStore = createStore<NetworkClient>()(
 	devtools(
 		persist(
 			(set) => ({
-				ipAddress: "unknown",
-				connectionDetails: {} as NetworkClientDetailsType,
-				setConnectionDetails: (data: NetworkClientDetailsType) =>
-					set({ connectionDetails: data }),
+				ipAddresses: [],
+				ipAddressRanges: [],
+				setIpAddresses: (data: string[]) => set({ ipAddresses: data }),
+				setIpRanges: (data: string[]) => set({ ipAddressRanges: data }),
 			}),
 			{
 				name: NetworkClientStoreNamespace,
