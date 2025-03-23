@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Time } from "~/lib/utils/time";
 import { getSystemVersion } from "~/logic/methods/system/sysinfo_version";
 import { systemStore, SystemVersionStoreNamespace } from "~/store/system";
 
@@ -12,10 +13,9 @@ const SystemInitProvider = ({ children }: { children: React.ReactNode }) => {
 		);
 		const now = new Date().getTime();
 
-		const getMinutesInMs = (minutes: number) => minutes * 60 * 1000;
-
 		const needsUpdate =
-			!lastUpdated || now - parseInt(lastUpdated) > getMinutesInMs(15);
+			!lastUpdated ||
+			now - parseInt(lastUpdated) > Time.getMinutesInMs(15);
 
 		if (!hasStore || needsUpdate) {
 			const fetchData = async () => {
