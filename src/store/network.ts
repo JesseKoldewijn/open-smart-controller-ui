@@ -8,6 +8,7 @@ export const NetworkClientStoreNamespace = "network>client";
 type NetworkClientDetailsType = ReturnType<typeof getConnectionStatus>;
 
 interface NetworkClient {
+	ipAddress: string;
 	connectionDetails: NetworkClientDetailsType;
 	setConnectionDetails: (data: NetworkClientDetailsType) => void;
 }
@@ -16,6 +17,7 @@ const networkClientStore = createStore<NetworkClient>()(
 	devtools(
 		persist(
 			(set) => ({
+				ipAddress: "unknown",
 				connectionDetails: {} as NetworkClientDetailsType,
 				setConnectionDetails: (data: NetworkClientDetailsType) =>
 					set({ connectionDetails: data }),
