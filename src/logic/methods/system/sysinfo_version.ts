@@ -44,9 +44,9 @@ export const useSystemVersionQuery = (
 
 	return createApiHook<SystemVersionResponse>(ip, _opts ?? opts, {
 		...apiHookOptions,
-		stateUpdateCallback: (data: SystemVersionResponse) => {
+		stateUpdateCallback: (data: { ip: string; data: SystemVersionRv }) => {
 			if (data) {
-				updateState(data.rv.version);
+				updateState(data);
 			}
 		},
 	});
