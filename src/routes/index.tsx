@@ -7,14 +7,26 @@ export const Route = createFileRoute("/")({
 
 function RouteComponent() {
 	const { version: versionData } = systemStore.getVersionStore.getState();
-	const { version, date, serial, build } = versionData;
+	const versionDataArray = versionData.map((x) => ({
+		ip: x.ip,
+		version: x.data.version,
+		date: x.data.date,
+		serial: x.data.serial,
+		build: x.data.build,
+	}));
 
 	return (
 		<div>
 			<div style={{ minHeight: 160 }}>
 				<pre>
 					{JSON.stringify(
-						{ serial, version, build, lastUpdated: date },
+						versionDataArray.map((x) => ({
+							ip: x.ip,
+							serial: x.serial,
+							version: x.version,
+							build: x.build,
+							lastUpdated: x.date,
+						})),
 						null,
 						2
 					)}

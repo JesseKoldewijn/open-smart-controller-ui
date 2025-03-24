@@ -1,5 +1,5 @@
 const defaults = {
-	DEFAULT_DOMAIN: "http://192.168.178.196",
+	DEFAULT_DOMAIN: "http://127.0.0.1",
 	DEFAULT_SEQ: 1,
 } as const;
 

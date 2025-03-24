@@ -13,7 +13,7 @@ export const validateIpAddressesAndRanges = (input?: {
 }) => {
 	const { ipAddresses, ipRanges } = input || {};
 
-	const validIps = new Set<string>().add("127.0.0.1");
+	const validIps = new Set<string>();
 
 	const invalidIps = new Set<string>();
 

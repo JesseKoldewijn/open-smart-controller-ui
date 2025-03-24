@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
-import { wb } from "~/lib/worker";
 
 // Create a new router instance
 const router = createRouter({
@@ -30,7 +29,3 @@ appRoot.render(
 		</QueryClientProvider>
 	</StrictMode>
 );
-
-if ("serviceWorker" in navigator) {
-	wb.register();
-}

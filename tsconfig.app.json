@@ -14,8 +14,7 @@
 			"~api/*": ["./src/lib/api/*"],
 			"~api": ["./src/lib/api"],
 			"~methods/*": ["./src/logic/methods/*"],
-			"~methods": ["./src/logic/methods"],
-			"~ws-worker": ["./public/ws-worker.js"]
+			"~methods": ["./src/logic/methods"]
 		},
 
 		/* Bundler mode */

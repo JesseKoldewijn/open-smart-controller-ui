@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { Time } from "~/lib/utils/time";
 import { getSystemVersion } from "~/logic/methods/system/sysinfo_version";
+import { networkStore } from "~/store/network";
 import { systemStore, SystemVersionStoreNamespace } from "~/store/system";
 
 const SystemInitProvider = ({ children }: { children: React.ReactNode }) => {
 	const { setVersionData } = systemStore.getVersionStore.getState();
+	const { ipAddresses } = networkStore.getNetworkClientStore.getState();
 
 	useEffect(() => {
 		const hasStore = !!localStorage.getItem(SystemVersionStoreNamespace);
@@ -19,9 +21,15 @@ const SystemInitProvider = ({ children }: { children: React.ReactNode }) => {
 
 		if (!hasStore || needsUpdate) {
 			const fetchData = async () => {
-				const data = await getSystemVersion();
-				if (data) {
-					setVersionData(data.rv.version);
+				if (!ipAddresses.length) return;
+				for (const ip of ipAddresses) {
+					const data = await getSystemVersion(ip);
+					if (data) {
+						setVersionData({
+							ip,
+							data: data.rv.version,
+						});
+					}
 				}
 			};
 

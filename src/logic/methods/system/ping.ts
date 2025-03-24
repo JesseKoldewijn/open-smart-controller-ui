@@ -29,4 +29,4 @@ interface SystemPingResponse {
 	error: boolean;
 }
 
-export const getSystemPing = () => api<SystemPingResponse>(opts);
+export const getSystemPing = (ip: string) => api<SystemPingResponse>(ip, opts);

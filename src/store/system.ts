@@ -6,17 +6,55 @@ import { deepMerge } from "~/store";
 export const SystemVersionStoreNamespace = "system>version";
 
 interface SystemVersion {
-	version: SystemVersionRv;
-	setVersionData: (data: SystemVersionRv) => void;
+	version: {
+		ip: string;
+		data: SystemVersionRv;
+	}[];
+	setVersionData: ({
+		ip,
+		data,
+	}: {
+		ip: string;
+		data: SystemVersionRv;
+	}) => void;
 }
 
 const versionStore = createStore<SystemVersion>()(
 	devtools(
 		persist(
-			(set) => ({
-				version: {} as SystemVersionRv,
-				setVersionData: (data: SystemVersionRv) =>
-					set({ version: data }),
+			(set, get) => ({
+				version: [] as {
+					ip: string;
+					data: SystemVersionRv;
+				}[],
+				setVersionData: ({ ip, data }) => {
+					const prev = new Set(get().version);
+					const hasIp = !![...prev].find((x) => x.ip === ip);
+
+					if (!hasIp) {
+						set({
+							version: [
+								...get().version,
+								{
+									ip,
+									data,
+								},
+							],
+						});
+					} else {
+						set({
+							version: get().version.map((x) => {
+								if (x.ip === ip) {
+									return {
+										ip,
+										data,
+									};
+								}
+								return x;
+							}),
+						});
+					}
+				},
 			}),
 			{
 				name: SystemVersionStoreNamespace,

@@ -2,17 +2,20 @@ import { API_CONSTANTS } from "~/lib/api/constants";
 import { ApiOptions } from "~/lib/api/types";
 
 class Internal_Api<GenericResponseType> {
+	ipAddress: string = API_CONSTANTS.DEFAULT_DOMAIN;
 	options: ApiOptions = API_CONSTANTS.DEFAULT_OPTIONS;
 	stateUpdateCallback: <GenericResponseType>(
 		data: GenericResponseType
 	) => void = () => {};
 
 	constructor(
+		ipAddress: string = API_CONSTANTS.DEFAULT_DOMAIN,
 		options: ApiOptions,
 		stateUpdateCallback: <GenericResponseType>(
 			data: GenericResponseType
 		) => void = () => {}
 	) {
+		this.ipAddress = ipAddress;
 		this.options = options;
 		this.stateUpdateCallback = stateUpdateCallback;
 	}
@@ -20,7 +23,7 @@ class Internal_Api<GenericResponseType> {
 	async call() {
 		try {
 			const response = await fetch(
-				new URL(API_CONSTANTS.PATHNAME, API_CONSTANTS.DEFAULT_DOMAIN),
+				new URL(API_CONSTANTS.PATHNAME, `http://${this.ipAddress}`),
 				{
 					mode: "cors",
 					method: API_CONSTANTS.HTTP_METHOD,
@@ -36,7 +39,8 @@ class Internal_Api<GenericResponseType> {
 
 			return data;
 		} catch (error) {
-			console.error(error);
+			const err: Error = error as Error;
+			console.debug("error thrown in api call: ", err.message);
 			return null;
 		}
 	}
@@ -50,12 +54,14 @@ class Internal_Api<GenericResponseType> {
  * @scope ../
  */
 export const internal_api = <GenericResponseType>(
+	ipAddress: string = API_CONSTANTS.DEFAULT_DOMAIN,
 	options: ApiOptions,
 	stateUpdateCallback?: <GenericResponseType>(
 		data: GenericResponseType
 	) => void
 ) => {
 	return new Internal_Api<GenericResponseType>(
+		ipAddress,
 		options,
 		stateUpdateCallback
 	).call();

@@ -2,14 +2,20 @@ import { ApiOptions } from "./types";
 import { internal_api } from "~/lib/api/internals";
 import { useQuery as query } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { API_CONSTANTS } from "~/lib/api/constants";
 
 export const api = <GenericResponseType>(
+	ipAddress: string = API_CONSTANTS.DEFAULT_DOMAIN,
 	opts: ApiOptions,
 	stateUpdateCallback?: <GenericResponseType>(
 		data: GenericResponseType
 	) => void
 ) => {
-	return internal_api<GenericResponseType>(opts, stateUpdateCallback);
+	return internal_api<GenericResponseType>(
+		ipAddress,
+		opts,
+		stateUpdateCallback
+	);
 };
 
 export interface ApiHookOptions {
@@ -20,6 +26,7 @@ export interface ApiHookOptions {
 }
 
 export const createApiHook = <GenericResponseType>(
+	ipAddress: string = API_CONSTANTS.DEFAULT_DOMAIN,
 	opts: ApiOptions,
 	apiHookOptions?: ApiHookOptions
 ) => {
@@ -42,7 +49,12 @@ export const createApiHook = <GenericResponseType>(
 	const q = query({
 		queryKey: ["systemVersion"],
 		queryFn: enabled
-			? async () => api<GenericResponseType>(opts, stateUpdateCallback)
+			? async () =>
+					api<GenericResponseType>(
+						ipAddress,
+						opts,
+						stateUpdateCallback
+					)
 			: async () => ({} as ReturnType<typeof api<GenericResponseType>>),
 		retryDelay: 2000,
 		refetchOnReconnect: true,

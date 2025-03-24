@@ -34,6 +34,7 @@ interface SystemVersionResponse {
 }
 
 export const useSystemVersionQuery = (
+	ip: string,
 	_opts?: ApiOptions,
 	apiHookOptions?: ApiHookOptions
 ) => {
@@ -41,7 +42,7 @@ export const useSystemVersionQuery = (
 	const updateState =
 		apiHookOptions?.stateUpdateCallback ?? store.setVersionData;
 
-	return createApiHook<SystemVersionResponse>(_opts ?? opts, {
+	return createApiHook<SystemVersionResponse>(ip, _opts ?? opts, {
 		...apiHookOptions,
 		stateUpdateCallback: (data: SystemVersionResponse) => {
 			if (data) {
@@ -51,4 +52,5 @@ export const useSystemVersionQuery = (
 	});
 };
 
-export const getSystemVersion = () => internal_api<SystemVersionResponse>(opts);
+export const getSystemVersion = (ip: string) =>
+	internal_api<SystemVersionResponse>(ip, opts);
