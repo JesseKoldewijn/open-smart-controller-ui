@@ -12,6 +12,7 @@
 		"@fastify/deepmerge": "^3.0.0",
 		"@tanstack/react-query": "^5.69.0",
 		"@tanstack/react-router": "^1.114.27",
+		"bowser": "^2.11.0",
 		"range_check": "^3.2.0",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
