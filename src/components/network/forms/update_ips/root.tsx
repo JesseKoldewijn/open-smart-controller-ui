@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { getSystemPing } from "~/logic/methods/system/ping";
 import { networkStore } from "~/store/network";
 
 type SysPingReturnType = ReturnType<typeof getSystemPing>;
 
 export const UpdateIpForm = () => {
+	const [loading, isLoading] = useState<boolean>(true);
+
 	const { ipAddresses, setIpAddresses } =
 		networkStore.getNetworkClientStore.getState();
-
-	const [didHidrate, setDidHidrate] = useState<boolean>(false);
 
 	const [addresses, setAddresses] = useState<string[]>([
 		...new Set(ipAddresses),
@@ -76,6 +76,10 @@ export const UpdateIpForm = () => {
 			return;
 		}
 		setValidatedAddresses(resultSet);
+
+		setTimeout(() => isLoading(false), 1000);
+
+		return resultSet;
 	};
 
 	const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -89,11 +93,11 @@ export const UpdateIpForm = () => {
 		});
 	};
 
-	useEffect(() => {
-		if (didHidrate) return;
-		setDidHidrate(true);
+	useLayoutEffect(() => {
 		checkAddresses();
 	}, []);
+
+	if (loading) return null;
 
 	return (
 		<div>

@@ -62,7 +62,7 @@ export const createApiHook = <GenericResponseType>(
 	});
 
 	useEffect(() => {
-		let interval: number;
+		let interval: NodeJS.Timeout;
 		if (isPolling) {
 			interval = setInterval(() => {
 				q.refetch();

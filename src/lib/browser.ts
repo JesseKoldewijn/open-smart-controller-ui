@@ -119,5 +119,5 @@ export const getBrowser = () => {
 		isChrome: browser.vendor === SUPPORTED_BROWSERS.CHROME,
 		isFirefox: browser.vendor === SUPPORTED_BROWSERS.FIREFOX,
 		isSafari: browser.vendor === SUPPORTED_BROWSERS.SAFARI,
-	};
+	} as const;
 };

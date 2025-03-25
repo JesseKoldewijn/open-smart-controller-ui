@@ -30,9 +30,7 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
-		"noUncheckedSideEffectImports": true,
-
-		"types": ["./node_modules/network-information-types"]
+		"noUncheckedSideEffectImports": true
 	},
 	"include": ["src"]
 }
