@@ -1,7 +1,8 @@
 {
-	"typescript.preferences.importModuleSpecifier": "non-relative",
-	"typescript.tsdk": "node_modules/typescript/lib",
-	"files.watcherExclude": {
-		"src/routeTree.gen.ts": true
-	}
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "files.watcherExclude": {
+    "src/routeTree.gen.ts": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

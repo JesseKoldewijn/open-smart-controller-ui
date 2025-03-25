@@ -1,13 +1,13 @@
 const Show = ({
-	isVisible,
-	children,
-	fallback,
+  isVisible,
+  children,
+  fallback,
 }: {
-	isVisible: boolean;
-	children: React.ReactNode;
-	fallback: React.ReactNode;
+  isVisible: boolean;
+  children: React.ReactNode;
+  fallback: React.ReactNode;
 }) => {
-	return <>{isVisible ? children : fallback}</>;
+  return <>{isVisible ? children : fallback}</>;
 };
 
 export default Show;
