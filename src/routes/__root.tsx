@@ -32,7 +32,7 @@ function RootComponent() {
           Open Smart-Controller
         </Link>
 
-        <div className="my-auto ml-auto flex gap-2 text-xs">
+        <div className="my-auto ml-auto hidden gap-2 text-xs sm:flex">
           <Link
             to="/"
             className="cursor-pointer rounded bg-neutral-500 px-3 py-1 font-bold text-white hover:bg-neutral-700"

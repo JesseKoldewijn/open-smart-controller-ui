@@ -2,7 +2,7 @@ import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
 import { getVersionStoreByIP } from "~/store/selectors/versionStore";
 
-export const Route = createFileRoute("/controller/$ip")({
+export const Route = createFileRoute("/controller/$ip/version")({
   loader: async ({ params }) => {
     return {
       ip: params.ip,
@@ -49,7 +49,7 @@ function RouteComponent() {
       <h1 className="text-lg font-medium">{ip}</h1>
       <table className="mx-auto md:min-w-sm">
         <tbody className="w-full">
-          {Object.entries(versionData.data).map(([key, value]) => {
+          {Object.entries(versionData).map(([key, value]) => {
             switch (key) {
               case "type":
               case "user":
@@ -97,7 +97,8 @@ function RouteComponent() {
       </table>
 
       <Link
-        to="/"
+        to="/controller/$ip"
+        params={{ ip: ip }}
         className="rounded bg-neutral-500 px-3 py-1 font-bold text-white hover:bg-neutral-700"
       >
         Back
