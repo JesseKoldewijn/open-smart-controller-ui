@@ -75,3 +75,51 @@ export const createApiHook = <GenericResponseType>(
     disablePolling,
   };
 };
+
+export const createApiPollingStack = <GenericResponseType>(
+  ipAddress: string = API_CONSTANTS.DEFAULT_DOMAIN,
+  opts: ApiBody,
+  apiHookOptions?: ApiHookOptions,
+) => {
+  const api = createApiHook<GenericResponseType>(
+    ipAddress,
+    opts,
+    apiHookOptions,
+  );
+  const [stackedData, setStackedData] = useState<GenericResponseType[]>(
+    api.data ? [api.data] : [],
+  );
+
+  useEffect(() => {
+    if (api.data) {
+      setStackedData((prev) => [
+        ...new Set([...prev, api.data as GenericResponseType]),
+      ]);
+    }
+  }, [api.data]);
+
+  useEffect(() => {
+    if (api.isError) {
+      api.disablePolling();
+    }
+  }, [api.isError]);
+
+  useEffect(() => {
+    if (api.isFetched) {
+      api.enablePolling();
+    }
+  }, [api.isFetched]);
+
+  const apiWithoutData = Object.entries(api)
+    .filter(([key]) => key !== "data")
+    .reduce(
+      (x) => x,
+      {} as Omit<ReturnType<typeof createApiHook<GenericResponseType>>, "data">,
+    );
+
+  return {
+    ...apiWithoutData,
+    initialData: api.data,
+    stackedData,
+  };
+};

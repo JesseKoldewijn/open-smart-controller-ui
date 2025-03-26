@@ -13,9 +13,6 @@ const ReactCompilerConfig = {
 
 // https://vite.dev/config/
 export default defineConfig({
-  server: {
-    host: "dev.local",
-  },
   plugins: [
     tsconfigPaths(),
     TanStackRouterVite({
@@ -31,7 +28,7 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       devOptions: {
-        enabled: true,
+        enabled: false,
       },
       manifest: manifest,
     }),

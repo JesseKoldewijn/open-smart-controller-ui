@@ -44,7 +44,7 @@ const internalApi = async <GenericResponseType>(
   } catch (error) {
     const err: Error = error as Error;
     console.debug("error thrown in api call: ", err.message);
-    return null;
+    return;
   }
 };
 
