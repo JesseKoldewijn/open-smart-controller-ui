@@ -43,6 +43,17 @@ function RouteComponent() {
 
                     <span>Driver: {object.driver}</span>
                     <span>Type: {object.type}</span>
+
+                    <Link
+                      to="/controller/$ip/$object"
+                      params={{
+                        ip,
+                        object: object.oid,
+                      }}
+                      className="rounded bg-neutral-500 px-3 py-1 text-center font-bold text-white hover:bg-neutral-700"
+                    >
+                      Open
+                    </Link>
                   </div>
                 );
               })}

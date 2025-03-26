@@ -1,6 +1,9 @@
 import { api, createApiHook } from "~/lib/api";
 import { ApiOptions } from "~/lib/api/types";
-import type { ObjectManagerGetObjectsResponse } from "~/logic/methods/object-manager/get_objects/types";
+import {
+  type ObjectManagerGetObjectsResponse,
+  ObjectManagerGetObjectsResponseStruct,
+} from "~/logic/methods/object-manager/get_objects/struct";
 import { objectManagerStore } from "~/store/object_manager";
 import { getObjectManagerObjectsByIp } from "~/store/selectors/objectManagerStore";
 
@@ -32,10 +35,13 @@ export const useObjectManagerObjects = (ip: string, _opts?: ApiOptions) => {
     },
   );
 
-  const initialData = getObjectManagerObjectsByIp(ip);
+  const [validationErr, initialData] =
+    ObjectManagerGetObjectsResponseStruct.validate(
+      getObjectManagerObjectsByIp(ip),
+    );
 
   const isDataEqual = initialData?.time === api.data?.time;
-  const dataIsEmpty = !api.data;
+  const dataIsEmpty = !api.data && !validationErr;
 
   return {
     ...api,

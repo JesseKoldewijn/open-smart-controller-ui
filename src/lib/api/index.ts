@@ -49,7 +49,7 @@ export const createApiHook = <GenericResponseType>(
   };
 
   const q = query({
-    queryKey: ["systemVersion"],
+    queryKey: [JSON.stringify(opts.method)],
     queryFn: enabled
       ? async () =>
           api<GenericResponseType>(ipAddress, opts, stateUpdateCallback)
@@ -79,13 +79,15 @@ export const createApiHook = <GenericResponseType>(
 export const createApiPollingStack = <GenericResponseType>(
   ipAddress: string = API_CONSTANTS.DEFAULT_DOMAIN,
   opts: ApiBody,
-  apiHookOptions?: ApiHookOptions,
-) => {
-  const api = createApiHook<GenericResponseType>(
-    ipAddress,
-    opts,
+  {
     apiHookOptions,
-  );
+  }: {
+    apiHookOptions?: ApiHookOptions;
+  },
+) => {
+  const api = createApiHook<GenericResponseType>(ipAddress, opts, {
+    ...apiHookOptions,
+  });
   const [stackedData, setStackedData] = useState<GenericResponseType[]>(
     api.data ? [api.data] : [],
   );

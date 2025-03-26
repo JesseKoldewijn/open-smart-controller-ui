@@ -1,7 +1,7 @@
 import { createStore } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-import { ObjectManagerGetObjectsResponse } from "~/logic/methods/object-manager/get_objects/types";
+import { ObjectManagerGetObjectsResponse } from "~/logic/methods/object-manager/get_objects/struct";
 import { deepMerge } from "~/store";
 
 export const ObjectManagerObjectsStoreNamespace = "object_manager>objects";
