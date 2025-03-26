@@ -3,4 +3,5 @@ export interface ApiOptions {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   arguments: any;
   seq?: number;
+  timeout?: number;
 }

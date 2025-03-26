@@ -5,7 +5,8 @@ const opts = {
   seq: 1,
   method: "api_ping",
   arguments: {},
-} satisfies ApiOptions;
+  timeout: 2000,
+} as const satisfies ApiOptions;
 
 interface SystemPingResponse {
   ok: boolean;
@@ -29,4 +30,5 @@ interface SystemPingResponse {
   error: boolean;
 }
 
-export const getSystemPing = (ip: string) => api<SystemPingResponse>(ip, opts);
+export const getSystemPing = (ip: string, _opts?: ApiOptions) =>
+  api<SystemPingResponse>(ip, { ...opts, ..._opts });

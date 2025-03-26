@@ -4,18 +4,18 @@ import { useEffect, useState } from "react";
 import { API_CONSTANTS } from "~/lib/api/constants";
 import { internal_api } from "~/lib/api/internals";
 
-import { ApiOptions } from "./types";
+import { ApiOptions as ApiBody } from "./types";
 
 export const api = <GenericResponseType>(
   ipAddress: string = API_CONSTANTS.DEFAULT_DOMAIN,
-  opts: ApiOptions,
+  body: ApiBody,
   stateUpdateCallback?: <GenericResponseType>(
     data: GenericResponseType,
   ) => void,
 ) => {
   return internal_api<GenericResponseType>(
     ipAddress,
-    opts,
+    body,
     stateUpdateCallback,
   );
 };
@@ -29,7 +29,7 @@ export interface ApiHookOptions {
 
 export const createApiHook = <GenericResponseType>(
   ipAddress: string = API_CONSTANTS.DEFAULT_DOMAIN,
-  opts: ApiOptions,
+  opts: ApiBody,
   apiHookOptions?: ApiHookOptions,
 ) => {
   const {

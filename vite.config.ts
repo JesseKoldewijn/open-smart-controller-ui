@@ -13,6 +13,9 @@ const ReactCompilerConfig = {
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    host: "dev.local",
+  },
   plugins: [
     tsconfigPaths(),
     TanStackRouterVite({

@@ -3,20 +3,36 @@ import { ApiOptions } from "~/lib/api/types";
 
 const internalApi = async <GenericResponseType>(
   ipAddress: string = API_CONSTANTS.DEFAULT_DOMAIN,
-  options: ApiOptions = API_CONSTANTS.DEFAULT_OPTIONS,
+  body: ApiOptions = API_CONSTANTS.DEFAULT_OPTIONS,
   stateUpdateCallback?: <GenericResponseType>(
     data: GenericResponseType,
   ) => void,
 ) => {
+  const { timeout, ..._body } = body;
+
   try {
+    let controller: AbortController | null = null;
+
+    if (timeout) {
+      controller = new AbortController();
+    }
+
     const response = await fetch(
       new URL(API_CONSTANTS.PATHNAME, `http://${ipAddress}`),
       {
         mode: "cors",
         method: API_CONSTANTS.HTTP_METHOD,
-        body: JSON.stringify(options),
+        body: JSON.stringify(_body),
+        signal: controller?.signal,
       },
     );
+
+    if (timeout) {
+      setTimeout(() => {
+        controller?.abort();
+      }, timeout);
+    }
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }

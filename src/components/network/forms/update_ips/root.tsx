@@ -56,7 +56,7 @@ export const UpdateIpForm = () => {
         ip: Array.from(responsePromises)[idx].ip,
       })) || [];
 
-    if (results.length === 0) {
+    if (results.length === 0 && validatedAddresses.length < 1) {
       setMessage("No IPs provided");
       isLoading(false);
       return;
@@ -71,12 +71,19 @@ export const UpdateIpForm = () => {
       }
     });
 
-    setMessage(null);
+    const isNewlyValid = data.find((x) => newIp.find((z) => z === x?.ip));
+
+    if (!isNewlyValid) {
+      setMessage("IP is not from a live controller");
+    } else {
+      setMessage(null);
+    }
 
     const resultSet = [...new Set(data)].filter((x) => x !== undefined);
 
     if (resultSet.length === 0) {
-      setMessage("No valid IPs provided");
+      if (validatedAddresses.length < 1) setMessage("No valid IPs provided");
+
       isLoading(false);
       return;
     }
@@ -90,8 +97,6 @@ export const UpdateIpForm = () => {
 
     const formData = new FormData(e.currentTarget);
     const ip = formData.get("ip") as string;
-
-    console.log(ip);
 
     if (!ip) return;
 
@@ -108,10 +113,10 @@ export const UpdateIpForm = () => {
         opacity: loading ? 0 : 1,
         pointerEvents: loading ? "none" : "auto",
       }}
-      className="flex flex-col items-center justify-center gap-4"
+      className="flex h-full w-full flex-col justify-center gap-4"
     >
-      <h1>Update IP</h1>
-      <form onSubmit={submitHandler} className="flex flex-col gap-2">
+      <h1 className="mx-auto">Update IP</h1>
+      <form onSubmit={submitHandler} className="mx-auto flex flex-col gap-2">
         <label htmlFor="ip" className="sr-only">
           IP Address
         </label>
@@ -121,6 +126,7 @@ export const UpdateIpForm = () => {
             name="ip"
             id="ip"
             className="rounded-md border px-3 py-1"
+            onChange={() => setMessage("")}
           />
           <button
             type="submit"
@@ -130,62 +136,65 @@ export const UpdateIpForm = () => {
           </button>
         </div>
       </form>
-      <div ref={parent} className="p-4 pt-0">
-        {validatedAddresses &&
-          validatedAddresses.map((address) => {
-            const status =
-              address.isController === null
-                ? "Unknown"
-                : address.isController == true
-                  ? "Valid"
-                  : "Invalid";
+      <div className="mx-auto flex min-h-60 w-full max-w-md flex-col items-center gap-2 overflow-x-hidden">
+        <div ref={parent} className="flex w-full flex-col p-4 pt-0">
+          {validatedAddresses &&
+            validatedAddresses.map((address) => {
+              const status =
+                address.isController === null
+                  ? "Unknown"
+                  : address.isController == true
+                    ? "Valid"
+                    : "Invalid";
 
-            const isInStore = ipAddresses.includes(address.ip);
+              const isInStore = ipAddresses.includes(address.ip);
 
-            return (
-              <div
-                key={address.ip}
-                className="flex flex-col gap-1 rounded-md border px-3 py-2"
-              >
-                {address.ip} - {status} -{" "}
-                {isInStore ? "In Store" : "Not In Store"}
-                <button
-                  className="cursor-pointer rounded bg-neutral-500 px-3 py-1 font-bold text-white hover:bg-neutral-700"
-                  onClick={() => {
-                    if (isInStore) {
-                      setIpAddresses(
-                        validatedAddresses
-                          .filter((ip) => ip.ip !== address.ip)
-                          .map((x) => x.ip),
-                      );
-                      setAddresses(
-                        validatedAddresses
-                          .filter((ip) => ip.ip !== address.ip)
-                          .map((x) => x.ip),
-                      );
-                      setValidatedAddresses((x) =>
-                        x.filter((ip) => ip.ip !== address.ip),
-                      );
-                    } else {
-                      setIpAddresses([...ipAddresses, address.ip]);
-                      setAddresses([...ipAddresses, address.ip]);
-                      setValidatedAddresses((x) => [
-                        ...new Set([
-                          ...x.filter((x) => x.ip !== address.ip),
-                          { ip: address.ip, isController: null },
-                        ]),
-                      ]);
-                      checkAddresses([address.ip]);
-                    }
-                  }}
+              return (
+                <div
+                  key={address.ip}
+                  className="relative flex flex-col gap-1 rounded-md border px-3 py-2"
                 >
-                  {isInStore ? "Remove from" : "Add to"} store
-                </button>
-              </div>
-            );
-          })}
+                  {address.ip} - {status} -{" "}
+                  {isInStore ? "In Store" : "Not In Store"}
+                  <button
+                    className="cursor-pointer rounded bg-neutral-500 px-3 py-1 font-bold text-white hover:bg-neutral-700"
+                    onClick={() => {
+                      if (isInStore) {
+                        const newAddresses = validatedAddresses.filter(
+                          (ip) => ip.ip !== address.ip,
+                        );
+
+                        setIpAddresses(newAddresses.map((x) => x.ip));
+                        setAddresses(newAddresses.map((x) => x.ip));
+                        setValidatedAddresses(newAddresses);
+                      } else {
+                        setIpAddresses([...ipAddresses, address.ip]);
+                        setAddresses([...ipAddresses, address.ip]);
+                        setValidatedAddresses((_x) => [
+                          ...new Set([
+                            ..._x.filter((x) => x.ip !== address.ip),
+                            {
+                              ip: address.ip,
+                              isController:
+                                address.isController ||
+                                _x.find((z) => z.ip === address.ip)
+                                  ?.isController ||
+                                null,
+                            },
+                          ]),
+                        ]);
+                        checkAddresses([address.ip]);
+                      }
+                    }}
+                  >
+                    {isInStore ? "Remove from" : "Add to"} store
+                  </button>
+                </div>
+              );
+            })}
+        </div>
+        {!!message && <>Message: {message}</>}
       </div>
-      {!!message && <>Message: {message}</>}
     </div>
   );
 };
